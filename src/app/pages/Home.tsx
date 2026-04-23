@@ -377,12 +377,7 @@ export function Home() {
       </section>
       <section className="relative h-screen flex flex-col items-center justify-center bg-[#0b0b0b] z-20 overflow-hidden border-t border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,215,0,0.05)_0%,transparent_60%)]" />
-        {/* <h2 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tighter text-center relative z-10">
-          Join UI-
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
-            Verse
-          </span>
-        </h2> */}
+       
         <Lottie animationData={uiVerseAnimation} loop={true} />
         <p className="text-xl text-white/60 mb-10 max-w-lg text-center relative z-10">
           Explore new things everyday
