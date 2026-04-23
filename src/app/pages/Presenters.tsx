@@ -50,7 +50,7 @@ export function Presenters() {
                       <User className="w-5 h-5 text-black" />
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors ">
                     {presenter.name}
                   </h3>
                   <p className="text-sm text-white/60">

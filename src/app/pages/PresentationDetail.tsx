@@ -1,22 +1,34 @@
-import { useParams, Link, useNavigate } from "react-router";
+import React from "react";
+import { useParams, Link, useNavigate, useLocation } from "react-router";
 import { presentations } from "../data/presentations";
 import {
   ArrowLeft,
   Heart,
   Share2,
-  Download,
   FileText,
   User,
   Play,
   Calendar,
+  X,
+  Copy,
+  Check,
+  Linkedin,
+  Facebook,
+  Mail,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function PresentationDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const presentation = presentations.find((p) => p.id === id);
   const [isLiked, setIsLiked] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
+
+  const fromPath = (location.state as { from?: string } | null)?.from;
 
   const otherPresentationsByPresenter = presentation
     ? presentations.filter(
@@ -40,8 +52,73 @@ export function PresentationDetail() {
     window.scrollTo(0, 0);
   }, [id]);
 
+  useEffect(() => {
+    setShareUrl(window.location.href);
+  }, [location.pathname, location.search, location.hash]);
+
+  useEffect(() => {
+    if (!isShareModalOpen) return;
+
+    const onEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsShareModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onEscapeKey);
+    return () => {
+      window.removeEventListener("keydown", onEscapeKey);
+    };
+  }, [isShareModalOpen]);
+
+  const getBackLabel = () => {
+    if (fromPath?.startsWith("/presentations")) return "Back to Presentations";
+    if (fromPath?.startsWith("/presenter/")) return "Back to Presenter";
+    if (fromPath === "/") return "Back to Home";
+    if (window.history.length > 1) return "Go Back";
+    return "Back to Home";
+  };
+
   const handleBackClick = () => {
+    if (fromPath) {
+      navigate(fromPath);
+      return;
+    }
+
+    if (window.history.length > 1) {
+      navigate(-1);
+      return;
+    }
+
     navigate("/");
+  };
+
+  const handleShare = (platform: "linkedin" | "facebook" | "x" | "email") => {
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedTitle = encodeURIComponent(
+      `${presentation?.title ?? "Presentation"} - UI-Verse`,
+    );
+
+    const shareTargets: Record<typeof platform, string> = {
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      x: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+      email: `mailto:?subject=${encodedTitle}&body=${encodedUrl}`,
+    };
+
+    window.open(shareTargets[platform], "_blank", "noopener,noreferrer");
+  };
+
+  const handleCopyUrl = async () => {
+    if (!shareUrl) return;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setIsCopied(true);
+      window.setTimeout(() => setIsCopied(false), 1800);
+    } catch (error) {
+      console.error("Failed to copy URL", error);
+    }
   };
 
   if (!presentation) {
@@ -72,7 +149,7 @@ export function PresentationDetail() {
             className="flex items-center gap-2 text-white/70 hover:text-white transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back to UI-Verse</span>
+            <span>{getBackLabel()}</span>
           </button>
           <div className="flex items-center gap-4">
             <button
@@ -88,7 +165,10 @@ export function PresentationDetail() {
               />
               <span>{isLiked ? "Liked" : "Like"}</span>
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-white/70 hover:bg-white/10 transition-all border border-white/10">
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer bg-white/5 text-white/70 hover:bg-white/10 transition-all border border-white/10"
+            >
               <Share2 className="w-4 h-4" />
               <span>Share</span>
             </button>
@@ -100,7 +180,7 @@ export function PresentationDetail() {
       <main className="pt-20">
         {/* Title Section */}
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-[1.5]">
             {presentation.title}
           </h1>
           <div className="flex items-center gap-3 text-white/50">
@@ -256,6 +336,7 @@ export function PresentationDetail() {
                   <Link
                     key={otherPresentation.id}
                     to={`/presentation/${otherPresentation.id}`}
+                    state={{ from: `${location.pathname}${location.search}${location.hash}` }}
                     className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
                   >
                     <div className="relative h-48 overflow-hidden">
@@ -342,6 +423,100 @@ export function PresentationDetail() {
           </div>
         </div>
       </main>
+
+      {isShareModalOpen && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-center justify-center px-4"
+          onClick={() => setIsShareModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-lg rounded-2xl bg-[#101010] text-white shadow-2xl border border-white/10 p-6 relative"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsShareModalOpen(false)}
+              className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors"
+              aria-label="Close share modal"
+            >
+              <X className="w-5 h-5 cursor-pointer" />
+            </button>
+
+            <h3 className="text-2xl font-bold pr-8 mb-2">Share Presentation</h3>
+            <p className="text-white/60 mb-6">
+              Share this presentation with your network.
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+              <button
+                onClick={() => handleShare("linkedin")}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/10 py-4 hover:bg-white/5 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#0a66c2] flex items-center justify-center">
+                  <Linkedin className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-medium cursor-pointer">LinkedIn</span>
+              </button>
+              <button
+                onClick={() => handleShare("facebook")}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/10 py-4 hover:bg-white/5 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-[#1877f2] flex items-center justify-center">
+                  <Facebook className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-medium cursor-pointer">Facebook</span>
+              </button>
+              <button
+                onClick={() => handleShare("x")}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/10 py-4 hover:bg-white/5 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
+                  <Share2 className="w-5 h-5 text-black" />
+                </div>
+                <span className="text-sm font-medium cursor-pointer">X</span>
+              </button>
+              <button
+                onClick={() => handleShare("email")}
+                className="flex flex-col items-center justify-center gap-2 rounded-xl border border-white/10 py-4 hover:bg-white/5 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ea4335] via-[#fbbc05] to-[#34a853] flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-sm font-medium cursor-pointer">Email</span>
+              </button>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-white/70">
+                Copy URL
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  readOnly
+                  value={shareUrl}
+                  className="flex-1 rounded-xl border border-white/15 px-3 py-2 text-sm bg-white/[0.06] text-white"
+                />
+                <button
+                  onClick={handleCopyUrl}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-yellow-500 text-black px-3 py-2 text-sm hover:bg-yellow-400 transition-colors font-semibold"
+                >
+                  {isCopied ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

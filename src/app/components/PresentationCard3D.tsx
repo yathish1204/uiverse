@@ -1,5 +1,5 @@
 import { Play } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 interface PresentationCard3DProps {
   id: string;
@@ -28,6 +28,7 @@ export function PresentationCard3D({
   isFocused,
   index,
 }: PresentationCard3DProps) {
+  const location = useLocation();
   const isReversed = index % 2 !== 0;
 
   const handleClick = () => {
@@ -37,6 +38,7 @@ export function PresentationCard3D({
   return (
     <Link
       to={`/presentation/${id}`}
+      state={{ from: `${location.pathname}${location.search}${location.hash}` }}
       onClick={handleClick}
       className="block relative w-[900px] h-[380px] cursor-pointer transition-all hover:scale-[1.01] group active:scale-[0.99]"
       style={{ cursor: 'pointer', pointerEvents: 'auto' }}
@@ -64,7 +66,12 @@ export function PresentationCard3D({
           <img
             src={thumbnail}
             alt={title}
-            className="absolute inset-0 w-full h-full object-cover opacity-95"
+            className="absolute inset-0 w-full h-full z-5 object-contain opacity-95"
+          />
+          <img
+            src={thumbnail}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover brightness-50 blur-lg opacity-95"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/0 to-transparent via-50%" />
 
@@ -75,12 +82,12 @@ export function PresentationCard3D({
             </div>
           </div>
           <div className="absolute top-4 right-4">
-            <p className="text-white/80 text-[10px] font-normal leading-none">{duration}</p>
+            <p className="text-white/80 text-[14px] leading-none">{duration}</p>
           </div>
 
           {/* Title */}
           <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/90 to-transparent pt-[40px]">
-            <p className="text-[#fefce8] text-[17px] font-medium leading-snug">{title}</p>
+            <p className="text-[#fefce8] text-[17px] font-semibold leading-snug">{title}</p>
           </div>
 
           {/* Play Overlay */}
@@ -96,7 +103,7 @@ export function PresentationCard3D({
 
       {/* Presenter */}
       <div
-        className={`absolute bottom-[-10px] w-[320px] h-[350px] pointer-events-none select-none ${
+        className={`absolute bottom-[-10px] z-22 w-[320px] h-[350px] pointer-events-none select-none ${
           isReversed ? "left-0" : "right-0"
         }`}
       >

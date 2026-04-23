@@ -1,5 +1,6 @@
 import imagePlaceholder from "../../imports/pplaceholder.png";
-import yathishImg from "../../imports/yathish.png";
+import yathishImg from "../../imports/yathish-portrait.png";
+import manojImg from "../../imports/manoj-portrait.png";
 import harshadThumbnail from "../../imports/har-thumbnail.png";
 import yathishThmubnail from "../../imports/yat-thumbnail.png";
 import yathishThmubnail2 from "../../imports/yat2-thumbnail.png";
@@ -178,11 +179,11 @@ export const presentations: Presentation[] = [
     id: "3",
     title: "Component Driven Development with Storybook",
     presenter: "Manojkumar G",
-    presenterImage: imagePlaceholder,
+    presenterImage: manojImg,
     thumbnail: manojThumbnail,
     videoUrl:
       "https://drive.google.com/file/d/1dGAHjB5k9G0B4zBc7eHZ6GxPQO8UPL1K/view",
-    category: "Development",
+    category: "UI",
     duration: "23:41 min",
     date: "02",
     month: "APRIL",
@@ -223,7 +224,7 @@ export const presentations: Presentation[] = [
     thumbnail: vidyaThumbnail,
     videoUrl:
       "https://drive.google.com/file/d/1OVNSLaX10oRWnOXX0aHWd0M2pDwtQyNf/view",
-    category: "Development",
+    category: "UI",
     duration: "17:11 min",
     date: "07",
     month: "APRIL",
@@ -269,7 +270,7 @@ export const presentations: Presentation[] = [
     thumbnail: navodithThumbnail,
     videoUrl:
       "https://drive.google.com/file/d/1Wv79wR9BYgqH1vE5sEU0iaO4uj2LtNta/view",
-    category: "Design & Development",
+    category: "AI",
     duration: "17:23 min",
     date: "14",
     month: "APRIL",
@@ -310,7 +311,7 @@ export const presentations: Presentation[] = [
     thumbnail: harshadThumbnail,
     videoUrl:
       "https://drive.google.com/file/d/1jE1N-lo-RYzlqWW1kGWMq3BmEycOWjCY/view",
-    category: "Design & Development",
+    category: "UI",
     duration: "20:41 min",
     date: "21",
     month: "APRIL",
@@ -351,7 +352,7 @@ export const presentations: Presentation[] = [
     thumbnail: yathishThmubnail,
     videoUrl:
       "https://drive.google.com/file/d/1HsXChLDNLaxn1tbdKZf5JTWWONpiYNd1/view",
-    category: "AI generation",
+    category: "AI",
     duration: "08:16 min",
     date: "20",
     month: "APRIL",

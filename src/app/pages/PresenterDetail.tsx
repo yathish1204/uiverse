@@ -1,10 +1,11 @@
-import { useParams, Link } from "react-router";
+import { useParams, Link, useLocation } from "react-router";
 import { presentations } from "../data/presentations";
 import { Navbar } from "../components/Navbar";
 import { ArrowLeft, Play, Calendar } from "lucide-react";
 
 export function PresenterDetail() {
   const { name } = useParams<{ name: string }>();
+  const location = useLocation();
   const presenterName = decodeURIComponent(name || "");
 
   const presenterPresentations = presentations.filter(
@@ -47,7 +48,7 @@ export function PresenterDetail() {
               className="w-32 h-32 rounded-full object-cover border-4 border-yellow-500/50"
             />
             <div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-2 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+              <h1 className="text-5xl md:text-6xl font-bold mb-2 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-[1.5]">
                 {presenterName}
               </h1>
               <p className="text-xl text-white/60">
@@ -62,6 +63,7 @@ export function PresenterDetail() {
               <Link
                 key={presentation.id}
                 to={`/presentation/${presentation.id}`}
+                state={{ from: `${location.pathname}${location.search}${location.hash}` }}
                 className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
               >
                 <div className="relative h-48 overflow-hidden">

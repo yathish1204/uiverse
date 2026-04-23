@@ -1,11 +1,14 @@
-import { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { Link } from "react-router";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lottie from "lottie-react";
 import { Navbar } from "../components/Navbar";
 import { PresentationCard3D } from "../components/PresentationCard3D";
 import { presentations } from "../data/presentations";
 import { ChevronDown } from "lucide-react";
-import heroBgImage from "../../../olena-bohovyk-Cq5NaI0yKBE-unsplash-1.jpg";
+import galaxyVideo from "../../imports/output.mp4"
+import uiVerseAnimation from "../../imports/Ui-verse.json"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,7 +52,23 @@ export function Home() {
   }, []);
 
   useEffect(() => {
+    document.documentElement.classList.add("home-hide-scrollbar");
+    document.body.classList.add("home-hide-scrollbar");
+
+    return () => {
+      document.documentElement.classList.remove("home-hide-scrollbar");
+      document.body.classList.remove("home-hide-scrollbar");
+    };
+  }, []);
+
+  useEffect(() => {
     if (!containerRef.current) return;
+    const videoMaxOpacity = 0.75;
+    const videoFadeInProgress = 0.18;
+
+    if (videoRef.current) {
+      gsap.set(videoRef.current, { opacity: 0 });
+    }
 
     if (titleRef.current) {
       gsap.set(titleRef.current, {
@@ -105,6 +124,9 @@ export function Home() {
               videoRef.current.currentTime =
                 progress * duration;
             }
+
+            const fadeProgress = Math.min(progress / videoFadeInProgress, 1);
+            videoRef.current.style.opacity = `${fadeProgress * videoMaxOpacity}`;
           }
 
           const spacingZ = 2500;
@@ -246,31 +268,37 @@ export function Home() {
   return (
     <>
       <style>{`
-        body {
+        html.home-hide-scrollbar,
+        body.home-hide-scrollbar {
           scrollbar-width: none;
           -ms-overflow-style: none;
         }
-        body::-webkit-scrollbar {
+        html.home-hide-scrollbar::-webkit-scrollbar,
+        body.home-hide-scrollbar::-webkit-scrollbar {
           display: none;
+          width: 0;
+          height: 0;
         }
       `}</style>
-      <div className="relative bg-[#0b0b0b] text-white">
-        <img
+      <section className="relative bg-[#0b0b0b] text-white">
+        {/* <img
           src={heroBgImage}
           alt="UI-VERSE Background"
           className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none opacity-35 mix-blend-screen"
-        />
-        <video
-          ref={videoRef}
-          src="https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4"
-          className="fixed inset-0 w-full h-full object-cover z-0 opacity-20 mix-blend-screen pointer-events-none"
-          muted
-          playsInline
-          preload="auto"
-        />
-        <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,#0b0b0b_80%)]" />
+        /> */}
+        <div className="sticky top-0 h-screen overflow-hidden z-0 pointer-events-none">
+          <video
+            ref={videoRef}
+            src={galaxyVideo}
+            className="absolute inset-0 w-full h-full object-cover"
+            muted
+            playsInline
+            preload="auto"
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(11,11,11,0.65)_80%)]" />
+        </div>
 
-        <div className="relative z-10">
+        <div className="relative z-10 -mt-[100vh]">
           <Navbar />
 
           <div
@@ -293,7 +321,7 @@ export function Home() {
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none origin-center flex flex-col items-center"
                   style={{ willChange: "opacity" }}
                 >
-                  <p className="text-[1.5rem] md:text-[2rem] font-normal tracking-[0.3em] text-white/40 mb-4">
+                  <p className="text-[1.5rem] md:text-[2rem]  font-normal tracking-[0.3em] text-white/40 -mb-12">
                     WELCOME TO
                   </p>
                   <h1 className="text-[8rem] md:text-[12rem] font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20 drop-shadow-[0_0_50px_rgba(255,255,255,0.3)] whitespace-nowrap">
@@ -345,24 +373,27 @@ export function Home() {
             </div>
           </div>
 
-          <div className="relative h-screen flex flex-col items-center justify-center bg-[#0b0b0b] z-20 overflow-hidden border-t border-white/10">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,215,0,0.05)_0%,transparent_60%)]" />
-            <h2 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tighter text-center relative z-10">
-              Join UI-
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
-                Verse
-              </span>
-            </h2>
-            <p className="text-xl text-white/60 mb-10 max-w-lg text-center relative z-10">
-              Explore infinite possibilities in UI design and
-              stay ahead of the curve.
-            </p>
-            <button className="relative z-10 px-10 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,215,0,0.3)] border border-yellow-300/50">
-              Start Exploring
-            </button>
-          </div>
         </div>
-      </div>
+      </section>
+      <section className="relative h-screen flex flex-col items-center justify-center bg-[#0b0b0b] z-20 overflow-hidden border-t border-white/10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,215,0,0.05)_0%,transparent_60%)]" />
+        {/* <h2 className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tighter text-center relative z-10">
+          Join UI-
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
+            Verse
+          </span>
+        </h2> */}
+        <Lottie animationData={uiVerseAnimation} loop={true} />
+        <p className="text-xl text-white/60 mb-10 max-w-lg text-center relative z-10">
+          Explore new things everyday
+        </p>
+        <Link
+          to="/presentations"
+          className="relative z-10 px-10 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-full font-bold text-lg hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,215,0,0.3)] border border-yellow-300/50"
+        >
+          Start Exploring
+        </Link>
+      </section>
     </>
   );
 }
