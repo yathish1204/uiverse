@@ -1,0 +1,101 @@
+:root {
+  --gold-primary: #FFD700;
+  --gold-dark: #D4AF37;
+  --gold-light: #FDB931;
+  --gold-bright: #FFED4E;
+  --brown-dark: #1A0F0A;
+  --brown-medium: #2D1810;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 215, 0, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.3);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.5);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.presentation-card-3d {
+  will-change: transform, opacity, filter;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-1deg) translateY(0px);
+  }
+  25% {
+    transform: rotate(1deg) translateY(-2px);
+  }
+  50% {
+    transform: rotate(-0.5deg) translateY(2px);
+  }
+  75% {
+    transform: rotate(0.5deg) translateY(-1px);
+  }
+}
+
+.glow-animate {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.wiggle-animate {
+  animation: wiggle 6s ease-in-out infinite;
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 215, 0, 0.3) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
