@@ -13,6 +13,7 @@ export interface Presentation {
   id: string;
   title: string;
   presenter: string;
+  presenterRole: string;
   presenterImage: string;
   thumbnail: string;
   videoUrl: string;
@@ -34,12 +35,6 @@ export interface Presentation {
     label: string;
     url: string;
   }>;
-  otherPresenters: Array<{
-    id: string;
-    name: string;
-    image: string;
-    role: string;
-  }>;
 }
 
 export const presentations: Presentation[] = [
@@ -47,6 +42,7 @@ export const presentations: Presentation[] = [
     id: "1",
     title: "AI Agents Demystified",
     presenter: "Yathish Shettigar",
+    presenterRole: "UI/UX Expert",
     presenterImage: yathishImg,
     thumbnail: yathishThmubnail2,
     videoUrl:
@@ -120,25 +116,12 @@ export const presentations: Presentation[] = [
         url: "https://microsoft.github.io/autogen/stable//index.html",
       },
     ],
-    otherPresenters: [
-      {
-        id: "p1",
-        name: "Manoj",
-        image: imagePlaceholder,
-        role: "Software Engineer",
-      },
-      {
-        id: "p2",
-        name: "Harrshad Kethar",
-        image: imagePlaceholder,
-        role: "Software Engineer",
-      },
-    ],
   },
   {
     id: "2",
     title: "NotebookLM",
     presenter: "Joy Joshua",
+    presenterRole: "UI/UX Expert",
     presenterImage: imagePlaceholder,
     thumbnail: joyThumbnail,
     videoUrl:
@@ -166,19 +149,12 @@ export const presentations: Presentation[] = [
         url: "#",
       },
     ],
-    otherPresenters: [
-      {
-        id: "p3",
-        name: "Manojkumar G",
-        image: imagePlaceholder,
-        role: "DSoftware Engineer",
-      },
-    ],
   },
   {
     id: "3",
     title: "Component Driven Development with Storybook",
     presenter: "Manojkumar G",
+    presenterRole: "UI/UX Expert",
     presenterImage: manojImg,
     thumbnail: manojThumbnail,
     videoUrl:
@@ -206,20 +182,12 @@ export const presentations: Presentation[] = [
         url: "#",
       },
     ],
-    otherPresenters: [
-      {
-        id: "p4",
-        name: "Alex Kim",
-        image:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80",
-        role: "Frontend Lead",
-      },
-    ],
   },
   {
     id: "4",
     title: "Tri UI Library",
     presenter: "Vidya Sagar",
+    presenterRole: "UI/UX Expert",
     presenterImage: imagePlaceholder,
     thumbnail: vidyaThumbnail,
     videoUrl:
@@ -252,20 +220,12 @@ export const presentations: Presentation[] = [
         url: "https://www.npmjs.com/package/tri-ui-library",
       },
     ],
-    otherPresenters: [
-      {
-        id: "p5",
-        name: "Nina Patel",
-        image:
-          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80",
-        role: "QA Lead",
-      },
-    ],
   },
   {
     id: "5",
     title: "AI Workflow",
     presenter: "Navodith Ashokan",
+    presenterRole: "UI/UX Expert",
     presenterImage: imagePlaceholder,
     thumbnail: navodithThumbnail,
     videoUrl:
@@ -293,20 +253,12 @@ export const presentations: Presentation[] = [
         url: "#",
       },
     ],
-    otherPresenters: [
-      {
-        id: "p6",
-        name: "Tom Wilson",
-        image:
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80",
-        role: "Motion Designer",
-      },
-    ],
   },
   {
     id: "6",
     title: "Figma skills X Claude Code",
     presenter: "Harrshad Kethar",
+    presenterRole: "UI/UX Expert",
     presenterImage: imagePlaceholder,
     thumbnail: harshadThumbnail,
     videoUrl:
@@ -334,20 +286,12 @@ export const presentations: Presentation[] = [
         url: "https://www.figma.com/community/skills",
       },
     ],
-    otherPresenters: [
-      {
-        id: "p7",
-        name: "John Jacob",
-        image:
-          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
-        role: "Tech Lead",
-      },
-    ],
   },
   {
     id: "7",
     title: "Figma Weave",
     presenter: "Yathish Shettigar",
+    presenterRole: "UI/UX Expert",
     presenterImage: yathishImg,
     thumbnail: yathishThmubnail,
     videoUrl:
@@ -373,15 +317,6 @@ export const presentations: Presentation[] = [
         type: "PDF",
         size: "2.1 MB",
         url: "#",
-      },
-    ],
-    otherPresenters: [
-      {
-        id: "p8",
-        name: "Priya Sharma",
-        image:
-          "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80",
-        role: "Accessibility Expert",
       },
     ],
   },

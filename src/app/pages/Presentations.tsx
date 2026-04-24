@@ -33,10 +33,10 @@ export function Presentations() {
       <Navbar />
 
       <main className="pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
-              <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-[1]">
+              <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-tight">
                 All Presentations
               </h1>
               <div className="relative w-full md:w-[360px]">
@@ -50,7 +50,7 @@ export function Presentations() {
                 />
               </div>
             </div>
-            <p className="text-xl text-white/60">
+            <p className="text-base sm:text-lg text-white/60">
               Explore our collection of presentations and insights
             </p>
           </div>
@@ -73,7 +73,7 @@ export function Presentations() {
           </div>
 
           {/* Presentations Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredPresentations.map((presentation) => (
               <Link
                 key={presentation.id}
@@ -84,11 +84,18 @@ export function Presentations() {
                 }}
                 className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
               >
-                <div className="relative h-56 overflow-hidden">
+                <div className="relative aspect-video sm:h-56 overflow-hidden bg-black">
+                  {/* Background: blurred + dimmed */}
                   <img
                     src={presentation.thumbnail}
                     alt={presentation.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="absolute inset-0 w-full h-full object-cover blur-lg brightness-50 scale-105"
+                  />
+                  {/* Foreground: clean */}
+                  <img
+                    src={presentation.thumbnail}
+                    alt={presentation.title}
+                    className="absolute inset-0 w-full h-full object-contain opacity-95 group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                   <div className="absolute top-3 left-3">
@@ -115,7 +122,7 @@ export function Presentations() {
                     <img
                       src={presentation.presenterImage}
                       alt={presentation.presenter}
-                      className="w-8 h-8 rounded-full object-cover border border-white/20"
+                      className="w-8 h-8 rounded-full object-cover border bg-gray-800 border-white/20"
                     />
                     <p className="text-sm text-white/70">{presentation.presenter}</p>
                   </div>

@@ -11,6 +11,7 @@ export function Presenters() {
         {
           name: p.presenter,
           image: p.presenterImage,
+          role: p.presenterRole,
           presentationCount: presentations.filter((pres) => pres.presenter === p.presenter).length,
         },
       ])
@@ -22,17 +23,17 @@ export function Presenters() {
       <Navbar />
 
       <main className="pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
+            <h1 className="text-2xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
               Our Presenters
             </h1>
-            <p className="text-xl text-white/60">
+            <p className="text-base sm:text-lg text-white/60">
               Meet the talented individuals sharing their knowledge and expertise
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {uniquePresenters.map((presenter) => (
               <Link
                 key={presenter.name}
@@ -44,7 +45,7 @@ export function Presenters() {
                     <img
                       src={presenter.image}
                       alt={presenter.name}
-                      className="w-32 h-32 rounded-full object-cover border-4 border-white/10 group-hover:border-yellow-500/50 transition-colors"
+                      className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white/10 group-hover:border-yellow-500/50 transition-colors bg-gray-800"
                     />
                     <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-yellow-500 rounded-full border-4 border-[#0a0a0a] flex items-center justify-center">
                       <User className="w-5 h-5 text-black" />
@@ -53,6 +54,7 @@ export function Presenters() {
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-400 transition-colors ">
                     {presenter.name}
                   </h3>
+                  <p className="text-sm text-white/60 mb-1">{presenter.role}</p>
                   <p className="text-sm text-white/60">
                     {presenter.presentationCount} {presenter.presentationCount === 1 ? 'Presentation' : 'Presentations'}
                   </p>

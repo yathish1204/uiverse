@@ -21,16 +21,17 @@ export function Home() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const focusedIndexRef = useRef(0);
   const hasRestoredScroll = useRef(false);
+  const homePresentations = useMemo(() => presentations.slice(0, 6), []);
 
   const cardTransforms = useMemo(() => {
-    return presentations.map((_, i) => {
+    return homePresentations.map((_, i) => {
       const randX = Math.sin(i * 2.1) * 1500;
       const randY = Math.cos(i * 1.8) * 1000;
       const randRx = Math.sin(i * 1.5) * 45;
       const randRy = Math.cos(i * 1.7) * 45;
       return { x: randX, y: randY, rx: randRx, ry: randRy };
     });
-  }, []);
+  }, [homePresentations]);
 
   useEffect(() => {
     const savedScrollPosition = sessionStorage.getItem("homeScrollPosition");
@@ -62,6 +63,8 @@ export function Home() {
   }, []);
 
   useEffect(() => {
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    if (!isDesktop) return;
     if (!containerRef.current) return;
     const videoMaxOpacity = 0.75;
     const videoFadeInProgress = 0.18;
@@ -113,7 +116,7 @@ export function Home() {
         scrub: 1.5,
         onUpdate: (self) => {
           const progress = self.progress;
-          const totalCards = presentations.length;
+          const totalCards = homePresentations.length;
 
           if (
             videoRef.current &&
@@ -301,11 +304,68 @@ export function Home() {
         <div className="relative z-10 -mt-[100vh]">
           <Navbar />
 
+          {/* Mobile: simple list (no 3D/scroll animation) */}
+          <div className="md:hidden pt-24 pb-14 px-4">
+            <h1 className="text-4xl font-black tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent mb-2">
+              UI-VERSE
+            </h1>
+            <p className="text-white/60 mb-6">
+              Explore the latest presentations
+            </p>
+
+            <div className="space-y-4">
+              {homePresentations.map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/presentation/${p.id}`}
+                  className="block bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-yellow-500/40 transition-colors"
+                  onClick={() => {
+                    sessionStorage.setItem("homeScrollPosition", window.scrollY.toString());
+                  }}
+                >
+                  <div className="relative aspect-video bg-black">
+                    <img
+                      src={p.thumbnail}
+                      alt={p.title}
+                      className="absolute inset-0 w-full h-full object-contain opacity-95"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute top-3 left-3">
+                      <span className="px-3 py-1 bg-gradient-to-r from-[#d08700]/90 to-[#a65f00]/90 border border-[#f0b100]/50 rounded-full text-white text-xs">
+                        {p.category}
+                      </span>
+                    </div>
+                    <div className="absolute top-3 right-3 text-white/80 text-xs">
+                      {p.duration}
+                    </div>
+                    <div className="absolute bottom-3 left-3 right-3">
+                      <p className="text-white font-semibold text-base line-clamp-2">
+                        {p.title}
+                      </p>
+                      <p className="text-white/60 text-sm mt-1">
+                        {p.presenter} • {p.presenterRole}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <Link
+                to="/presentations"
+                className="inline-flex items-center justify-center w-full px-6 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-black rounded-2xl font-bold text-base shadow-[0_0_24px_rgba(255,215,0,0.25)] border border-yellow-300/50"
+              >
+                View all presentations
+              </Link>
+            </div>
+          </div>
+
           <div
             ref={containerRef}
-            className="relative"
+            className="relative hidden md:block"
             style={{
-              height: `${presentations.length * 100}vh`,
+              height: `${homePresentations.length * 100}vh`,
             }}
           >
             <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
@@ -344,7 +404,7 @@ export function Home() {
                   </div>
                 </div>
 
-                {presentations.map((presentation, index) => (
+                {homePresentations.map((presentation, index) => (
                   <div
                     key={presentation.id}
                     ref={(el) => {

@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams, Link, useLocation } from "react-router";
 import { presentations } from "../data/presentations";
 import { Navbar } from "../components/Navbar";
@@ -32,7 +33,7 @@ export function PresenterDetail() {
       <Navbar />
 
       <main className="pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <Link
             to="/presenters"
             className="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors mb-8"
@@ -41,24 +42,27 @@ export function PresenterDetail() {
             <span>Back to Presenters</span>
           </Link>
 
-          <div className="mb-12 flex items-center gap-6">
+          <div className="mb-12 flex flex-col sm:flex-row sm:items-center gap-6">
             <img
               src={presenter.presenterImage}
               alt={presenterName}
-              className="w-32 h-32 rounded-full object-cover border-4 border-yellow-500/50"
+              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-yellow-500/50 bg-gray-800"
             />
             <div>
-              <h1 className="text-5xl md:text-6xl font-bold mb-2 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-[1.5]">
+              <h1 className="text-2xl md:text-4xl  font-bold mb-2 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-tight">
                 {presenterName}
               </h1>
+              <p className="text-base sm:text-lg text-white/70 mb-1">
+                {presenter.presenterRole}
+              </p>
               <p className="text-xl text-white/60">
                 {presenterPresentations.length} {presenterPresentations.length === 1 ? 'Presentation' : 'Presentations'}
               </p>
             </div>
           </div>
 
-          <h2 className="text-3xl font-bold mb-6 text-white">All Presentations</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <h2 className="text-lg md:text-2xl font-semibold mb-6 text-white">All Presentations</h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {presenterPresentations.map((presentation) => (
               <Link
                 key={presentation.id}
@@ -66,11 +70,18 @@ export function PresenterDetail() {
                 state={{ from: `${location.pathname}${location.search}${location.hash}` }}
                 className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
               >
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative aspect-video w-full sm:h-48 overflow-hidden">
+                  {/* Background: blurred + dimmed */}
                   <img
                     src={presentation.thumbnail}
                     alt={presentation.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="absolute inset-0 w-full h-full object-cover blur-lg brightness-50 scale-105"
+                  />
+                  {/* Foreground: clean */}
+                  <img
+                    src={presentation.thumbnail}
+                    alt={presentation.title}
+                    className="absolute inset-0 w-full h-full object-contain opacity-95 group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                   <div className="absolute top-3 left-3">

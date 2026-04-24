@@ -43,8 +43,15 @@ export function PresentationDetail() {
         new Map(
           presentations
             .filter((p) => p.presenter !== presentation.presenter)
-            .map((p) => [p.presenter, { name: p.presenter, image: p.presenterImage }])
-        ).values()
+            .map((p) => [
+              p.presenter,
+              {
+                name: p.presenter,
+                image: p.presenterImage,
+                role: p.presenterRole,
+              },
+            ]),
+        ).values(),
       )
     : [];
 
@@ -178,26 +185,12 @@ export function PresentationDetail() {
 
       {/* Main Content */}
       <main className="pt-20">
-        {/* Title Section */}
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-[1.5]">
-            {presentation.title}
-          </h1>
-          <div className="flex items-center gap-3 text-white/50">
-            <span className="px-3 py-1 bg-gradient-to-r from-[#d08700]/90 to-[#a65f00]/90 border border-[#f0b100]/50 rounded-full text-white text-sm">
-              {presentation.category}
-            </span>
-            <span>•</span>
-            <span>{presentation.duration}</span>
-          </div>
-        </div>
 
         {/* Video Section */}
-        <div className="w-full px-6 mb-12">
+        <div className="w-full px-4 sm:px-6 pt-4 sm:pt-8">
           <div className="max-w-7xl mx-auto">
             <div
-              className="relative w-full bg-black rounded-xl overflow-hidden border border-white/10 shadow-2xl"
-              style={{ height: "75vh" }}
+              className="relative w-full bg-black rounded-xl overflow-hidden border border-white/10 shadow-2xl aspect-video max-h-[75vh]"
             >
               {presentation.videoUrl.includes(
                 "drive.google.com",
@@ -226,8 +219,24 @@ export function PresentationDetail() {
           </div>
         </div>
 
+        {/* Title + Meta (under video) */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-5 sm:mt-8 mb-6">
+          <h1 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-tight sm:leading-[1.2]">
+            {presentation.title}
+          </h1>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-white/50">
+            <span className="px-3 py-1 bg-gradient-to-r from-[#d08700]/90 to-[#a65f00]/90 border border-[#f0b100]/50 rounded-full text-white text-sm">
+              {presentation.category}
+            </span>
+            <span className="hidden sm:inline">•</span>
+            <span className="text-sm sm:text-base">{presentation.duration}</span>
+          </div>
+        </div>
+
+        
+
         {/* Presenter & Date Info */}
-        <div className="max-w-7xl mx-auto px-6 mb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
           <div className="grid md:grid-cols-2 gap-8">
             {/* Presenter Info */}
             <Link
@@ -241,14 +250,14 @@ export function PresentationDetail() {
                 <img
                   src={presentation.presenterImage}
                   alt={presentation.presenter}
-                  className="w-16 h-16 rounded-full object-cover border-2 border-yellow-500/50 group-hover:border-yellow-400 transition-colors"
+                  className="w-16 h-16 rounded-full object-cover  bg-gray-900 border-2 border-yellow-500/50 group-hover:border-yellow-400 transition-colors"
                 />
                 <div>
                   <p className="text-xl font-bold text-white group-hover:text-yellow-400 transition-colors">
                     {presentation.presenter}
                   </p>
                   <p className="text-sm text-white/60">
-                    {presentation.category} Expert
+                    {presentation.presenterRole}
                   </p>
                 </div>
               </div>
@@ -287,8 +296,8 @@ export function PresentationDetail() {
         </div>
 
         {/* Attachments Section */}
-        <div className="max-w-7xl mx-auto px-6 mb-16">
-          <h2 className="text-3xl font-bold mb-6 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
+          <h2 className="text-lg md:text-2xl font-semibold mb-6 text-white">
             Attachments & Resources
           </h2>
           <div className="space-y-3">
@@ -326,8 +335,8 @@ export function PresentationDetail() {
 
         {/* Other Presentations by Presenter */}
         {otherPresentationsByPresenter.length > 0 && (
-          <div className="max-w-7xl mx-auto px-6 mb-16">
-            <h2 className="text-3xl font-bold mb-6 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-16">
+            <h2 className="text-lg md:text-2xl font-semibold mb-6 text-white">
               Other Presentations by {presentation.presenter}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -339,11 +348,18 @@ export function PresentationDetail() {
                     state={{ from: `${location.pathname}${location.search}${location.hash}` }}
                     className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
                   >
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-48 overflow-hidden bg-black">
+                      {/* Background: blurred + dimmed */}
                       <img
                         src={otherPresentation.thumbnail}
                         alt={otherPresentation.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="absolute inset-0 w-full h-full object-cover blur-lg brightness-50 scale-105"
+                      />
+                      {/* Foreground: clean */}
+                      <img
+                        src={otherPresentation.thumbnail}
+                        alt={otherPresentation.title}
+                        className="absolute inset-0 w-full h-full object-contain opacity-95 group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                       <div className="absolute top-3 left-3">
@@ -386,42 +402,42 @@ export function PresentationDetail() {
         )}
 
         {/* Other Presenters Section */}
-        <div className="max-w-7xl mx-auto px-6 pb-20">
-          <h2 className="text-3xl font-bold mb-6 text-white">
-            Other Presenters
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Other Presenters from Data */}
-            {otherPresenters.map((presenter) => (
-              <Link
-                key={presenter.name}
-                to={`/presenter/${encodeURIComponent(presenter.name)}`}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-yellow-500/30 hover:bg-white/10 transition-all group cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <img
-                      src={presenter.image}
-                      alt={presenter.name}
-                      className="w-16 h-16 rounded-full object-cover border-2 border-white/10 group-hover:border-yellow-500/50 transition-colors"
-                    />
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full border-2 border-[#0a0a0a] flex items-center justify-center">
-                      <User className="w-3 h-3 text-black" />
+        {otherPresenters.length > 0 && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+            <h2 className="text-lg md:text-2xl font-semibold mb-6 text-white">
+              Other Presenters
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {otherPresenters.map((presenter) => (
+                <Link
+                  key={presenter.name}
+                  to={`/presenter/${encodeURIComponent(presenter.name)}`}
+                  state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+                  className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-yellow-500/30 hover:bg-white/10 transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <img
+                        src={presenter.image}
+                        alt={presenter.name}
+                        className="w-16 h-16 rounded-full object-cover border-2 border-white/10 group-hover:border-yellow-500/50 transition-colors bg-gray-800"
+                      />
+                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full border-2 border-[#0a0a0a] flex items-center justify-center">
+                        <User className="w-3 h-3 text-black" />
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-white group-hover:text-yellow-400 transition-colors truncate">
+                        {presenter.name}
+                      </p>
+                      <p className="text-sm text-white/60">{presenter.role}</p>
                     </div>
                   </div>
-                  <div>
-                    <p className="font-semibold text-white group-hover:text-yellow-400 transition-colors">
-                      {presenter.name}
-                    </p>
-                    <p className="text-sm text-white/60">
-                      Presenter
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </main>
 
       {isShareModalOpen && (
