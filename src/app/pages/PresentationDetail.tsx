@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router";
-import { presentations } from "../data/presentations";
+import { usePresentationStore } from "../state/presentationStore";
 import {
   ArrowLeft,
   Heart,
@@ -22,6 +22,7 @@ export function PresentationDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const { presentations } = usePresentationStore();
   const presentation = presentations.find((p) => p.id === id);
   const [isLiked, setIsLiked] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);

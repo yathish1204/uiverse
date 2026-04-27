@@ -1,12 +1,13 @@
 import React from "react";
 import { useParams, Link, useLocation } from "react-router";
-import { presentations } from "../data/presentations";
 import { Navbar } from "../components/Navbar";
 import { ArrowLeft, Play, Calendar } from "lucide-react";
+import { usePresentationStore } from "../state/presentationStore";
 
 export function PresenterDetail() {
   const { name } = useParams<{ name: string }>();
   const location = useLocation();
+  const { presentations } = usePresentationStore();
   const presenterName = decodeURIComponent(name || "");
 
   const presenterPresentations = presentations.filter(

@@ -5,14 +5,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lottie from "lottie-react";
 import { Navbar } from "../components/Navbar";
 import { PresentationCard3D } from "../components/PresentationCard3D";
-import { presentations } from "../data/presentations";
 import { ChevronDown } from "lucide-react";
-import galaxyVideo from "../../imports/output.mp4"
 import uiVerseAnimation from "../../imports/Ui-verse.json"
+import { usePresentationStore } from "../state/presentationStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export function Home() {
+  const galaxyVideo = new URL("../../imports/output.mp4", import.meta.url).href;
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
@@ -21,7 +21,8 @@ export function Home() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const focusedIndexRef = useRef(0);
   const hasRestoredScroll = useRef(false);
-  const homePresentations = useMemo(() => presentations.slice(0, 6), []);
+  const { presentations } = usePresentationStore();
+  const homePresentations = useMemo(() => presentations.slice(0, 6), [presentations]);
 
   const cardTransforms = useMemo(() => {
     return homePresentations.map((_, i) => {

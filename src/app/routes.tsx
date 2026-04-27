@@ -4,11 +4,16 @@ import { PresentationDetail } from "./pages/PresentationDetail";
 import { Presenters } from "./pages/Presenters";
 import { PresenterDetail } from "./pages/PresenterDetail";
 import { Presentations } from "./pages/Presentations";
+import { Auth } from "./pages/Auth";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: Home,
+  },
+  {
+    path: "/auth",
+    Component: Auth,
   },
   {
     path: "/presentations",

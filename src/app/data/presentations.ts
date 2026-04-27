@@ -320,47 +320,5 @@ export const presentations: Presentation[] = [
       },
     ],
   },
-  // {
-  //   id: "8",
-  //   title: "Modern CSS: Grid, Flexbox, and Beyond",
-  //   presenter: "Tom Wilson",
-  //   presenterImage:
-  //     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80",
-  //   thumbnail:
-  //     "https://images.unsplash.com/photo-1523437113738-bbd3cc89fb19?w=1200&q=80",
-  //   videoUrl:
-  //     "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-  //   category: "Design",
-  //   duration: "48 min",
-  //   date: "05",
-  //   month: "APRIL",
-  //   day: "Sunday",
-  //   description:
-  //     "Modern CSS layout techniques including Grid, Flexbox, and cutting-edge features to build responsive, beautiful interfaces.",
-  //   attachments: [
-  //     {
-  //       id: "a14",
-  //       name: "CSS-Grid-Templates.zip",
-  //       type: "ZIP",
-  //       size: "3.4 MB",
-  //       url: "#",
-  //     },
-  //     {
-  //       id: "a15",
-  //       name: "Layout-Examples.pdf",
-  //       type: "PDF",
-  //       size: "5.8 MB",
-  //       url: "#",
-  //     },
-  //   ],
-  //   otherPresenters: [
-  //     {
-  //       id: "p9",
-  //       name: "Sarah Chen",
-  //       image:
-  //         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=600&q=80",
-  //       role: "CSS Specialist",
-  //     },
-  //   ],
-  // },
+
 ];
