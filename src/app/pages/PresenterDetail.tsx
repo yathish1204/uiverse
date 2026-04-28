@@ -68,7 +68,7 @@ export function PresenterDetail() {
               <Link
                 key={presentation.id}
                 to={`/presentation/${presentation.id}`}
-                state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+                state={{ from: `${location.pathname}${location.search}${location.hash}`, autoplay: true }}
                 className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
               >
                 <div className="relative aspect-video w-full sm:h-48 overflow-hidden">

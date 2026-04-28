@@ -320,6 +320,7 @@ export function Home() {
                 <Link
                   key={p.id}
                   to={`/presentation/${p.id}`}
+                  state={{ from: "/", autoplay: true }}
                   className="block bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-yellow-500/40 transition-colors"
                   onClick={() => {
                     sessionStorage.setItem("homeScrollPosition", window.scrollY.toString());

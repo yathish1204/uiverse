@@ -30,7 +30,9 @@ export function PresentationDetail() {
   const [isCopied, setIsCopied] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
-  const fromPath = (location.state as { from?: string } | null)?.from;
+  const fromState = (location.state as { from?: string; autoplay?: boolean } | null) ?? null;
+  const fromPath = fromState?.from;
+  const shouldAutoplay = Boolean(fromState?.autoplay);
 
   const otherPresentationsByPresenter = presentation
     ? presentations.filter(
@@ -61,9 +63,10 @@ export function PresentationDetail() {
     window.scrollTo(0, 0);
   }, [id]);
 
-  // YouTube-like behavior: start playback immediately on open.
+  // YouTube-like behavior: start playback immediately on open when coming from a card click.
   useEffect(() => {
     if (!presentation) return;
+    if (!shouldAutoplay) return;
     if (presentation.videoUrl.includes("drive.google.com")) return;
     const v = videoRef.current;
     if (!v) return;
@@ -214,9 +217,9 @@ export function PresentationDetail() {
                 "drive.google.com",
               ) ? (
                 <iframe
-                  src={`${presentation.videoUrl.replace("/view", "/preview")}?autoplay=1`}
+                  src={`${presentation.videoUrl.replace("/view", "/preview")}${shouldAutoplay ? "?autoplay=1" : ""}`}
                   className="w-full h-full"
-                  allow="autoplay"
+                  allow="autoplay; fullscreen"
                   allowFullScreen
                   title={presentation.title}
                 />
@@ -225,8 +228,8 @@ export function PresentationDetail() {
                   ref={videoRef}
                   src={presentation.videoUrl}
                   controls
-                  autoPlay
-                  muted
+                  autoPlay={shouldAutoplay}
+                  muted={shouldAutoplay}
                   className="w-full h-full object-contain"
                   poster={presentation.thumbnail}
                 >
@@ -363,7 +366,7 @@ export function PresentationDetail() {
                   <Link
                     key={otherPresentation.id}
                     to={`/presentation/${otherPresentation.id}`}
-                    state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+                    state={{ from: `${location.pathname}${location.search}${location.hash}`, autoplay: true }}
                     className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
                   >
                     <div className="relative h-48 overflow-hidden bg-black">

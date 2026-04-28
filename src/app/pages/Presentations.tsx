@@ -496,7 +496,7 @@ export function Presentations() {
               <Link
                 key={presentation.id}
                 to={`/presentation/${presentation.id}`}
-                state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+                state={{ from: `${location.pathname}${location.search}${location.hash}`, autoplay: true }}
                 onClick={() => {
                   sessionStorage.removeItem("homeScrollPosition");
                 }}
