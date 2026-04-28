@@ -65,14 +65,6 @@ export function Presenters() {
               <DialogHeader>
                 <DialogTitle className="flex items-center justify-between">
                   <span>Add new Presenter</span>
-                  <button
-                    type="button"
-                    className="text-white/60 hover:text-white"
-                    onClick={() => setOpen(false)}
-                    aria-label="Close"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
                 </DialogTitle>
               </DialogHeader>
 
@@ -224,7 +216,6 @@ export function Presenters() {
                 <DialogHeader>
                   <DialogTitle className="flex items-center justify-between">
                     <span>Edit Presenter</span>
-                    
                   </DialogTitle>
                 </DialogHeader>
                 <form
