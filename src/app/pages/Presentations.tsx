@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router";
 import { Navbar } from "../components/Navbar";
-import { Play, Calendar, Search, Plus, X, Heart, Share2, Trash2 } from "lucide-react";
+import { Play, Calendar, Search, Plus, X, Heart, Share2, Trash2, Pencil } from "lucide-react";
 import { useState } from "react";
 import { usePresentationStore } from "../state/presentationStore";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../components/ui/dialog";
@@ -312,14 +312,6 @@ export function Presentations() {
                   <DialogHeader>
                     <DialogTitle className="flex items-center justify-between">
                       <span>Add new Presenter</span>
-                      <button
-                        type="button"
-                        className="text-white/60 hover:text-white"
-                        onClick={() => setOpenAddPresenter(false)}
-                        aria-label="Close"
-                      >
-                        <X className="w-5 h-5" />
-                      </button>
                     </DialogTitle>
                   </DialogHeader>
                   <form
@@ -448,58 +440,8 @@ export function Presentations() {
                     </div>
                   </div>
 
-                  {/* Like / Share counts + admin actions (always visible in-card) */}
-                  {/* <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                    <HoverCard openDelay={150} closeDelay={80}>
-                      <HoverCardTrigger asChild>
-                        <button
-                          type="button"
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 border border-white/10 text-white/90 hover:border-yellow-500/40"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (!user) return;
-                            toggleLike(presentation.id, { fullName: user.fullName, email: user.email });
-                          }}
-                        >
-                          <Heart className="w-4 h-4 text-yellow-300" />
-                          <span className="text-xs">{getLikes(presentation.id).count}</span>
-                        </button>
-                      </HoverCardTrigger>
-                      <HoverCardContent
-                        side="bottom"
-                        align="end"
-                        className="w-64 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 text-white"
-                      >
-                        <p className="text-sm font-semibold mb-2">Liked by</p>
-                        {getLikes(presentation.id).users.length === 0 ? (
-                          <p className="text-sm text-white/60">No likes yet</p>
-                        ) : (
-                          <div className="space-y-1.5 max-h-44 overflow-auto pr-1">
-                            {getLikes(presentation.id).users.map((u) => (
-                              <div key={u.email} className="text-sm">
-                                <p className="text-white/90 leading-tight">{u.fullName}</p>
-                                <p className="text-xs text-white/50 leading-tight">{u.email}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </HoverCardContent>
-                    </HoverCard>
-
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-black/60 border border-white/10 text-white/90 hover:border-yellow-500/40"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        incrementShare(presentation.id);
-                      }}
-                    >
-                      <Share2 className="w-4 h-4 text-yellow-300" />
-                      <span className="text-xs">{getShares(presentation.id)}</span>
-                    </button>
-
+                 
+                  <div className="absolute bottom-3 right-3  items-center gap-2 hidden group-hover:flex">
                     {isAdmin && (
                       <>
                         <button
@@ -513,7 +455,7 @@ export function Presentations() {
                             setOpenEditPresentation(true);
                           }}
                         >
-                          <span className="text-xs font-bold">Edit</span>
+                          <span className="text-xs font-bold"><Pencil className="w-4 h-4" /></span>
                         </button>
                         <button
                           type="button"
@@ -529,7 +471,7 @@ export function Presentations() {
                         </button>
                       </>
                     )}
-                  </div> */}
+                  </div>
                 </div>
                 <div className="p-3 flex-col  items-start justify-between">
                   <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
