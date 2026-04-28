@@ -7,7 +7,7 @@ import { Navbar } from "../components/Navbar";
 import { PresentationCard3D } from "../components/PresentationCard3D";
 import { ChevronDown } from "lucide-react";
 import uiVerseAnimation from "../../imports/Ui-verse.json"
-import { usePresentationStore } from "../state/presentationStore";
+import { presentations as basePresentations } from "../data/presentations";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,8 +21,9 @@ export function Home() {
   const [focusedIndex, setFocusedIndex] = useState(0);
   const focusedIndexRef = useRef(0);
   const hasRestoredScroll = useRef(false);
-  const { presentations } = usePresentationStore();
-  const homePresentations = useMemo(() => presentations.slice(0, 6), [presentations]);
+  // Home hero should always reflect the first 6 cards from the source file (in-file order),
+  // independent of store sorting/filters.
+  const homePresentations = useMemo(() => basePresentations.slice(0, 6), []);
 
   const cardTransforms = useMemo(() => {
     return homePresentations.map((_, i) => {

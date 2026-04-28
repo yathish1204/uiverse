@@ -18,6 +18,7 @@ import {
 } from "../components/ui/select";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "../components/ui/hover-card";
 import { useAuth } from "../state/auth";
+import type { Presentation } from "../data/presentations";
 
 export function Presentations() {
   const location = useLocation();
@@ -28,6 +29,7 @@ export function Presentations() {
     presenters,
     addPresentation,
     addPresenter,
+    updatePresentation,
     deletePresentation,
     toggleLike,
     getLikes,
@@ -36,17 +38,20 @@ export function Presentations() {
   } = usePresentationStore();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState("");
-  const [openAddPresentation, setOpenAddPresentation] = useState(false);
+  const [openPresentationModal, setOpenPresentationModal] = useState(false);
+  const [presentationModalMode, setPresentationModalMode] = useState<"add" | "edit">("add");
   const [openAddPresenter, setOpenAddPresenter] = useState(false);
-  const [openEditPresentation, setOpenEditPresentation] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState<Presentation | null>(null);
 
   const [newTitle, setNewTitle] = useState("");
-  const [newDuration, setNewDuration] = useState("");
   const [newPresenterName, setNewPresenterName] = useState("");
+  const [newVideoUrl, setNewVideoUrl] = useState("");
+  const [newCategory, setNewCategory] = useState("UI");
+  const [newThumbnail, setNewThumbnail] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newDateISO, setNewDateISO] = useState("");
-  const [newDay, setNewDay] = useState("Monday");
   const [links, setLinks] = useState<Array<{ label: string; url: string }>>([{ label: "", url: "" }]);
 
   const [presenterName, setPresenterName] = useState("");
@@ -56,6 +61,40 @@ export function Presentations() {
   const categories = ["All", ...Array.from(new Set(presentations.map((p) => p.category)))];
 
   const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const resetPresentationForm = () => {
+    setNewTitle("");
+    setNewPresenterName("");
+    setNewVideoUrl("");
+    setNewCategory("UI");
+    setNewThumbnail("");
+    setNewDescription("");
+    setNewDateISO("");
+    setLinks([{ label: "", url: "" }]);
+    setEditId(null);
+  };
+
+  const openAddModal = () => {
+    setPresentationModalMode("add");
+    resetPresentationForm();
+    setOpenPresentationModal(true);
+  };
+
+  const openEditModal = (p: Presentation) => {
+    setPresentationModalMode("edit");
+    setEditId(p.id);
+    setNewTitle(p.title ?? "");
+    setNewPresenterName(p.presenter ?? "");
+    setNewVideoUrl(p.videoUrl ?? "");
+    setNewCategory(p.category ?? "UI");
+    setNewThumbnail(p.thumbnail ?? "");
+    setNewDescription(p.description ?? "");
+    setNewDateISO("");
+    const mappedLinks =
+      p.referenceLinks?.map((l) => ({ label: l.label ?? "", url: l.url ?? "" })) ?? [];
+    setLinks(mappedLinks.length ? mappedLinks : [{ label: "", url: "" }]);
+    setOpenPresentationModal(true);
+  };
 
   const filteredPresentations = presentations.filter((presentation) => {
     const matchesCategory =
@@ -98,14 +137,27 @@ export function Presentations() {
             </p>
           </div>
 
+         
           {/* Floating + CTA */}
           {isAdmin && (
-            <Dialog open={openAddPresentation} onOpenChange={setOpenAddPresentation}>
+            <Dialog
+              open={openPresentationModal}
+              onOpenChange={(open) => {
+                setOpenPresentationModal(open);
+                if (!open) {
+                  resetPresentationForm();
+                }
+              }}
+            >
               <DialogTrigger asChild>
                 <button
                   type="button"
                   aria-label="Add presentation"
                   className="fixed bottom-8 right-8 z-50 size-14 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-[0_0_28px_rgba(255,215,0,0.25)] border border-yellow-300/50 hover:scale-105 transition-transform grid place-items-center"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openAddModal();
+                  }}
                 >
                   <Plus className="w-6 h-6" />
                 </button>
@@ -114,7 +166,7 @@ export function Presentations() {
               <DialogContent className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 text-white max-w-2xl">
               <DialogHeader>
                 <DialogTitle className="flex items-center justify-between">
-                  <span>Add new Presentation</span>
+                  <span>{presentationModalMode === "edit" ? "Edit Presentation" : "Add new Presentation"}</span>
                 </DialogTitle>
               </DialogHeader>
 
@@ -122,25 +174,34 @@ export function Presentations() {
                 className="space-y-5 max-h-[85dvh] overflow-y-auto pr-1"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  const safeDateISO =
-                    newDateISO || new Date().toISOString().slice(0, 10);
+                  if (presentationModalMode === "edit" && editId) {
+                    updatePresentation({
+                      id: editId,
+                      title: newTitle.trim(),
+                      presenter: newPresenterName.trim(),
+                      videoUrl: newVideoUrl.trim(),
+                      category: newCategory.trim(),
+                      thumbnail: newThumbnail.trim(),
+                      description: newDescription.trim(),
+                      ...(newDateISO ? { dateISO: newDateISO } : {}),
+                      referenceLinks: links.filter((l) => l.label.trim() && l.url.trim()),
+                    });
+                    setOpenPresentationModal(false);
+                    return;
+                  }
+
+                  const safeDateISO = newDateISO || new Date().toISOString().slice(0, 10);
                   addPresentation({
                     title: newTitle,
-                    duration: newDuration,
                     presenter: newPresenterName,
+                    videoUrl: newVideoUrl,
+                    category: newCategory,
+                    thumbnail: newThumbnail,
                     description: newDescription,
                     dateISO: safeDateISO,
-                    day: newDay,
                     referenceLinks: links.filter((l) => l.label.trim() && l.url.trim()),
                   });
-                  setNewTitle("");
-                  setNewDuration("");
-                  setNewPresenterName("");
-                  setNewDescription("");
-                  setNewDateISO("");
-                  setNewDay("Monday");
-                  setLinks([{ label: "", url: "" }]);
-                  setOpenAddPresentation(false);
+                  setOpenPresentationModal(false);
                 }}
               >
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -155,14 +216,17 @@ export function Presentations() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="pres-duration">Duration</Label>
+                    <Label htmlFor="pres-videoUrl">Google Drive video URL</Label>
                     <Input
-                      id="pres-duration"
-                      value={newDuration}
-                      onChange={(e) => setNewDuration(e.target.value)}
-                      placeholder="e.g. 20:41 min"
+                      id="pres-videoUrl"
+                      value={newVideoUrl}
+                      onChange={(e) => setNewVideoUrl(e.target.value)}
+                      placeholder="https://drive.google.com/file/d/.../view"
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
                     />
+                    <p className="text-xs text-white/50">
+                      Duration is auto-detected from the video.
+                    </p>
                   </div>
                 </div>
 
@@ -182,7 +246,7 @@ export function Presentations() {
                       <SelectTrigger className="bg-white/5 border-white/10 text-white">
                         <SelectValue placeholder="Select presenter" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#0a0a0a] border border-white/10 text-white">
+                      <SelectContent className="z-[2105] bg-[#0a0a0a] border border-white/10 text-white">
                         <SelectItem value="__add_new_presenter__">+ Add a new presenter</SelectItem>
                         {presenters.map((p) => (
                           <SelectItem key={p.name} value={p.name}>
@@ -194,19 +258,22 @@ export function Presentations() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="pres-day">Day</Label>
-                    <Select value={newDay} onValueChange={setNewDay}>
-                      <SelectTrigger className="bg-white/5 border-white/10 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#0a0a0a] border border-white/10 text-white">
-                        {["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"].map((d) => (
-                          <SelectItem key={d} value={d}>
-                            {d}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="pres-category">Category</Label>
+                    <Input
+                      id="pres-category"
+                      list="presentation-categories"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      placeholder="Select or type…"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                    />
+                    <datalist id="presentation-categories">
+                      {["AI", "UI", "Development", "API", "Backend", "Testing", "DevOps", "Security", "Data"].map(
+                        (c) => (
+                          <option key={c} value={c} />
+                        )
+                      )}
+                    </datalist>
                   </div>
                 </div>
 
@@ -221,7 +288,28 @@ export function Presentations() {
                       className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
                     />
                   </div>
-                  <div className="space-y-2" />
+                  <div className="space-y-2">
+                    <Label htmlFor="pres-thumbnail">Video thumbnail</Label>
+                    <Input
+                      id="pres-thumbnail"
+                      type="file"
+                      accept="image/*"
+                      className="bg-white/5 border-white/10 text-white file:text-white file:bg-white/10 file:border-0 file:rounded-lg file:px-3 file:py-1.5"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) {
+                          setNewThumbnail("");
+                          return;
+                        }
+                        const reader = new FileReader();
+                        reader.onload = () => setNewThumbnail(String(reader.result ?? ""));
+                        reader.readAsDataURL(file);
+                      }}
+                    />
+                    <p className="text-xs text-white/50">
+                      If not uploaded, a default thumbnail is generated from the title.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -294,7 +382,7 @@ export function Presentations() {
                     type="button"
                     variant="outline"
                     className="border-white/10 bg-white/5 text-white hover:bg-white/10"
-                    onClick={() => setOpenAddPresentation(false)}
+                    onClick={() => setOpenPresentationModal(false)}
                   >
                     Cancel
                   </Button>
@@ -302,7 +390,7 @@ export function Presentations() {
                     type="submit"
                     className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-bold border border-yellow-300/50"
                   >
-                    Add presentation
+                    {presentationModalMode === "edit" ? "Save changes" : "Add presentation"}
                   </Button>
                 </div>
               </form>
@@ -414,7 +502,7 @@ export function Presentations() {
                 }}
                 className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
               >
-                <div className="relative  sm:h-44 overflow-hidden bg-black">
+                <div className="relative h-40 sm:h-44 overflow-hidden bg-black">
                   {/* Background: blurred + dimmed */}
                   <img
                     src={presentation.thumbnail}
@@ -428,11 +516,11 @@ export function Presentations() {
                     className="absolute inset-0 w-full h-full object-contain opacity-95 group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                  <div className="w-full absolute top-2 px-3 flex justify-between items-center">
-                    <div className="px-3 py-1 bg-gradient-to-r from-[#d08700]/90 to-[#a65f00]/90 border border-[#f0b100]/50 rounded-full text-white text-xs">
+                  <div className="w-full absolute top-2 px-2 sm:px-3 flex justify-between items-center">
+                    <div className="px-2.5 py-1 bg-gradient-to-r from-[#d08700]/90 to-[#a65f00]/90 border border-[#f0b100]/50 rounded-full text-white text-[11px] sm:text-xs">
                       {presentation.category}
                     </div>
-                    <span className="text-white/80 text-xs">{presentation.duration}</span>
+                    <span className="text-white/80 text-[11px] sm:text-xs">{presentation.duration}</span>
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center border-2 border-yellow-300/50 shadow-lg">
@@ -441,7 +529,7 @@ export function Presentations() {
                   </div>
 
                  
-                  <div className="absolute bottom-3 right-3  items-center gap-2 hidden group-hover:flex">
+                  <div className="absolute bottom-3 right-3 items-center gap-2 flex opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                     {isAdmin && (
                       <>
                         <button
@@ -451,8 +539,7 @@ export function Presentations() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            setEditId(presentation.id);
-                            setOpenEditPresentation(true);
+                            openEditModal(presentation as unknown as Presentation);
                           }}
                         >
                           <span className="text-xs font-bold"><Pencil className="w-4 h-4" /></span>
@@ -464,7 +551,8 @@ export function Presentations() {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            deletePresentation(presentation.id);
+                            setPendingDelete(presentation as unknown as Presentation);
+                            setOpenConfirmDelete(true);
                           }}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -473,21 +561,21 @@ export function Presentations() {
                     )}
                   </div>
                 </div>
-                <div className="p-3 flex-col  items-start justify-between">
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
+                <div className="p-3 sm:p-3 flex-col items-start justify-between">
+                  <h3 className="text-base sm:text-xl font-semibold text-white mb-1.5 sm:mb-2 group-hover:text-yellow-400 transition-colors line-clamp-2">
                     {presentation.title}
                   </h3>
                  
-                  <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 min-w-0">
                     <img
                       src={presentation.presenterImage}
                       alt={presentation.presenter}
-                      className="w-8 h-8 rounded-full object-cover border bg-gray-800 border-white/20"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border bg-gray-800 border-white/20"
                     />
-                    <p className="text-sm text-white/70">{presentation.presenter}</p>
+                    <p className="text-sm text-white/70 truncate">{presentation.presenter}</p>
                   </div>
-                  <div className="flex items-center gap-3 text-sm text-white/60">
+                  <div className="flex items-center gap-2 text-[12px] sm:text-sm text-white/60 shrink-0">
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       <span>
@@ -501,6 +589,8 @@ export function Presentations() {
             ))}
           </div>
 
+          
+
           {filteredPresentations.length === 0 && (
             <div className="text-center py-20">
               <p className="text-2xl text-white/40">
@@ -510,6 +600,51 @@ export function Presentations() {
           )}
         </div>
       </main>
+
+      {/* Confirm delete */}
+      <Dialog
+        open={openConfirmDelete}
+        onOpenChange={(open) => {
+          setOpenConfirmDelete(open);
+          if (!open) setPendingDelete(null);
+        }}
+      >
+        <DialogContent className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirm delete?</DialogTitle>
+          </DialogHeader>
+          <p className="text-white/70 text-sm">
+            {pendingDelete ? (
+              <>
+                You’re about to delete <span className="text-white font-semibold">{pendingDelete.title}</span>{" "}
+                by <span className="text-white font-semibold">{pendingDelete.presenter}</span>.
+              </>
+            ) : (
+              "You’re about to delete this presentation."
+            )}
+          </p>
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="border-white/10 bg-white/5 text-white hover:bg-white/10"
+              onClick={() => setOpenConfirmDelete(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="bg-red-600 hover:bg-red-700 text-white font-bold"
+              onClick={() => {
+                if (pendingDelete) deletePresentation(pendingDelete.id);
+                setOpenConfirmDelete(false);
+              }}
+            >
+              Yes, Delete
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

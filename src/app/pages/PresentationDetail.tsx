@@ -28,6 +28,7 @@ export function PresentationDetail() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
   const fromPath = (location.state as { from?: string } | null)?.from;
 
@@ -59,6 +60,22 @@ export function PresentationDetail() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  // YouTube-like behavior: start playback immediately on open.
+  useEffect(() => {
+    if (!presentation) return;
+    if (presentation.videoUrl.includes("drive.google.com")) return;
+    const v = videoRef.current;
+    if (!v) return;
+    // Attempt autoplay; browsers may block if not muted.
+    v.muted = true;
+    const p = v.play();
+    if (p && typeof (p as Promise<unknown>).catch === "function") {
+      (p as Promise<unknown>).catch(() => {
+        // ignore autoplay restrictions
+      });
+    }
+  }, [presentation?.id]);
 
   useEffect(() => {
     setShareUrl(window.location.href);
@@ -197,10 +214,7 @@ export function PresentationDetail() {
                 "drive.google.com",
               ) ? (
                 <iframe
-                  src={presentation.videoUrl.replace(
-                    "/view",
-                    "/preview",
-                  )}
+                  src={`${presentation.videoUrl.replace("/view", "/preview")}?autoplay=1`}
                   className="w-full h-full"
                   allow="autoplay"
                   allowFullScreen
@@ -208,8 +222,11 @@ export function PresentationDetail() {
                 />
               ) : (
                 <video
+                  ref={videoRef}
                   src={presentation.videoUrl}
                   controls
+                  autoPlay
+                  muted
                   className="w-full h-full object-contain"
                   poster={presentation.thumbnail}
                 >

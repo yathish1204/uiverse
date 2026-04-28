@@ -101,9 +101,19 @@ export function Auth() {
                 )}
 
                 <Tabs value={tab} onValueChange={(v) => setTab(v as "login" | "signup")}>
-                  <TabsList className="w-full grid grid-cols-2 bg-white/5 border border-white/10">
-                    <TabsTrigger value="login">Login</TabsTrigger>
-                    <TabsTrigger value="signup">Signup</TabsTrigger>
+                  <TabsList className="w-full grid grid-cols-2 bg-white/5 border border-white/10 rounded-full p-1">
+                    <TabsTrigger
+                      value="login"
+                      className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-black data-[state=active]:border-yellow-300/50 border border-transparent"
+                    >
+                      Login
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="signup"
+                      className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-black data-[state=active]:border-yellow-300/50 border border-transparent"
+                    >
+                      Signup
+                    </TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="login" className="mt-6">
