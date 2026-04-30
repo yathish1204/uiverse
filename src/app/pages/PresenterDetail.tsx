@@ -43,11 +43,11 @@ export function PresenterDetail() {
             <span>Back to Presenters</span>
           </Link>
 
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-center gap-6">
+          <div className="mb-12 flex  gap-6">
             <img
               src={presenter.presenterImage}
               alt={presenterName}
-              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-yellow-500/50 bg-gray-800"
+              className="w-22 h-22 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-yellow-500/50 bg-gray-800"
             />
             <div>
               <h1 className="text-2xl md:text-4xl  font-bold mb-2 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent leading-tight">
@@ -82,7 +82,7 @@ export function PresenterDetail() {
                   <img
                     src={presentation.thumbnail}
                     alt={presentation.title}
-                    className="absolute inset-0 w-full h-full object-contain opacity-95 group-hover:scale-105 transition-transform duration-300"
+                    className="absolute inset-0 w-full h-full object-contain  group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
                   <div className="absolute top-3 left-3">

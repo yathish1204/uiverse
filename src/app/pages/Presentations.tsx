@@ -498,10 +498,10 @@ export function Presentations() {
                 to={`/presentation/${presentation.id}`}
                 state={{ from: `${location.pathname}${location.search}${location.hash}`, autoplay: true }}
                 onClick={() => {
-                  sessionStorage.removeItem("homeScrollPosition");
-                }}
-                className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
-              >
+                  sessionStorage.removeItem("homeScrollPosition"); 
+                }} title={presentation.title}  aria-label={presentation.title}
+                className="group bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"   >
+              
                 <div className="relative h-40 sm:h-44 overflow-hidden bg-black">
                   {/* Background: blurred + dimmed */}
                   <img
@@ -520,7 +520,7 @@ export function Presentations() {
                     <div className="px-2.5 py-1 bg-gradient-to-r from-[#d08700]/90 to-[#a65f00]/90 border border-[#f0b100]/50 rounded-full text-white text-[11px] sm:text-xs">
                       {presentation.category}
                     </div>
-                    <span className="text-white/80 text-[11px] sm:text-xs">{presentation.duration}</span>
+                    <span className="text-white/80 text-[11px] sm:text-xs text-shadow-lg">{presentation.duration}</span>
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center border-2 border-yellow-300/50 shadow-lg">
@@ -529,12 +529,12 @@ export function Presentations() {
                   </div>
 
                  
-                  <div className="absolute bottom-3 right-3 items-center gap-2 flex opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
+                  <div className="absolute bottom-3 right-3 items-center gap-2 flex opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"  >
                     {isAdmin && (
                       <>
                         <button
                           type="button"
-                          className="inline-flex items-center justify-center size-9 rounded-full bg-black/60 border border-white/10 text-white/90 hover:border-yellow-500/40"
+                          className="inline-flex items-center justify-center size-9 rounded-full bg-black/60 border border-white/10 text-white/90 hover:border-yellow-500/40 cursor-pointer"
                           aria-label="Edit presentation"
                           onClick={(e) => {
                             e.preventDefault();
@@ -546,7 +546,7 @@ export function Presentations() {
                         </button>
                         <button
                           type="button"
-                          className="inline-flex items-center justify-center size-9 rounded-full bg-black/60 border border-white/10 text-white/90 hover:border-red-500/40 hover:text-red-200"
+                          className="inline-flex items-center justify-center size-9 rounded-full bg-black/60 border border-white/10 text-white/90 hover:border-red-500/40 hover:text-red-200 cursor-pointer"
                           aria-label="Delete presentation"
                           onClick={(e) => {
                             e.preventDefault();
@@ -561,13 +561,13 @@ export function Presentations() {
                     )}
                   </div>
                 </div>
-                <div className="p-3 sm:p-3 flex-col items-start justify-between">
-                  <h3 className="text-base sm:text-xl font-semibold text-white mb-1.5 sm:mb-2 group-hover:text-yellow-400 transition-colors line-clamp-2">
+                <div className="p-3 sm:p-3 flex-col items-start justify-between"  >
+                  <h3 className="text-base sm:text-xl font-semibold text-white mb-1.5 sm:mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
                     {presentation.title}
                   </h3>
                  
                   <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center gap-2 min-w-0"  >
                     <img
                       src={presentation.presenterImage}
                       alt={presentation.presenter}
@@ -575,7 +575,7 @@ export function Presentations() {
                     />
                     <p className="text-sm text-white/70 truncate">{presentation.presenter}</p>
                   </div>
-                  <div className="flex items-center gap-2 text-[12px] sm:text-sm text-white/60 shrink-0">
+                  <div className="flex items-center gap-2 text-[12px] sm:text-sm text-white/60 shrink-0" title={"Presented on"} aria-label={presentation.date} >
                     <div className="flex items-center gap-1">
                       <Calendar className="w-4 h-4" />
                       <span>

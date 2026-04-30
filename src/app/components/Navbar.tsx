@@ -157,7 +157,7 @@ export function Navbar() {
                   {isAdmin && (
                     <>
                       <DropdownMenuItem
-                        className="cursor-pointer focus:bg-white/10"
+                        className="cursor-pointer focus:bg-white/20 hover:bg-white/12 focus:text-white transition-all duration-300"
                         onSelect={(e) => {
                           e.preventDefault();
                           setOpenProfileMenu(false);
@@ -170,7 +170,7 @@ export function Navbar() {
                     </>
                   )}
                   <DropdownMenuItem
-                    className="cursor-pointer focus:bg-white/10"
+                    className="cursor-pointer focus:bg-white/20 hover:bg-white/12 focus:text-white transition-all duration-300"
                     onSelect={(e) => {
                       e.preventDefault();
                       setOpenProfileMenu(false);
@@ -188,7 +188,7 @@ export function Navbar() {
           {user ? (
             <button
               type="button"
-              className="md:hidden inline-flex items-center justify-center"
+              className="md:hidden inline-flex items-center justify-center cursor-pointer"
               aria-label={isMenuOpen ? "Close profile menu" : "Open profile menu"}
               aria-expanded={isMenuOpen}
               onClick={() => setIsMenuOpen((v) => !v)}
@@ -303,7 +303,7 @@ export function Navbar() {
       {/* Logout confirm */}
       <Dialog open={openLogoutConfirm} onOpenChange={setOpenLogoutConfirm}>
         <DialogContent className="bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 text-white max-w-lg">
-          <DialogHeader>
+          <DialogHeader >
             <DialogTitle>Confirm logout?</DialogTitle>
           </DialogHeader>
           <p className="text-white/70 text-sm">Are you sure you want to logout?</p>
@@ -341,8 +341,8 @@ export function Navbar() {
             if (open) setOpenProfileMenu(false);
           }}
         >
-          <SheetContent className="w-[92vw] sm:max-w-md px-4 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 text-white">
-            <SheetHeader>
+          <SheetContent className="w-[92vw] sm:max-w-md px-4 bg-[#0a0a0a]/95 backdrop-blur-xl border border-white/10 text-white z-200">
+            <SheetHeader >
               <SheetTitle className="text-white">Deleted</SheetTitle>
             </SheetHeader>
 

@@ -136,7 +136,10 @@ export function Home() {
 
           const spacingZ = 2500;
           const startZ = -2500;
-          const endZ = (totalCards - 1) * spacingZ;
+          // Push the camera slightly beyond the last card so it can scroll out
+          // before the next "Explore all" section takes over.
+          const extraEndZ = 1000;
+          const endZ = (totalCards - 1) * spacingZ + extraEndZ;
           const cameraZ = startZ + progress * (endZ - startZ);
 
           if (titleRef.current) {

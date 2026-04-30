@@ -44,7 +44,7 @@ export function Auth() {
       <main className="h-full w-full">
         <div className="h-full w-full flex flex-col lg:flex-row">
           {/* 70%: Tiled presentation cards (hover reveals a single card) */}
-          <section className="relative hidden lg:block lg:basis-[70%] h-full overflow-hidden bg-gradient-to-b from-white/5 to-black/40">
+          <section className="relative hidden lg:block lg:basis-[60%] h-full overflow-hidden bg-gradient-to-b from-white/5 to-black/40">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.10)_0%,transparent_55%)]" />
 
             <div className="absolute inset-0">
@@ -85,12 +85,12 @@ export function Auth() {
           </section>
 
           {/* 30%: Login / Signup (end-to-end, no card/box) */}
-          <aside className="relative h-full w-full lg:basis-[30%] overflow-hidden">
+          <aside className="relative h-full w-full lg:basis-[40%] overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,215,0,0.08)_0%,transparent_55%)]" />
             <div className="relative h-full w-full flex items-center justify-center px-6 sm:px-10">
               <div className="w-full max-w-md">
                 <div className="mb-6">
-                  <h2 className="text-3xl font-bold text-white">Welcome back</h2>
+                  <h2 className="text-lg md:text-3xl font-bold text-white">Welcome back</h2>
                   <p className="text-white/60 mt-1">Login or create an account to continue.</p>
                 </div>
 
@@ -101,16 +101,16 @@ export function Auth() {
                 )}
 
                 <Tabs value={tab} onValueChange={(v) => setTab(v as "login" | "signup")}>
-                  <TabsList className="w-full grid grid-cols-2 bg-white/5 border border-white/10 rounded-full p-1">
+                  <TabsList className="w-full grid grid-cols-2 bg-white/5 border border-white/10 rounded-full p-1 h-10 md:h-12 items-center">
                     <TabsTrigger
                       value="login"
-                      className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-black data-[state=active]:border-yellow-300/50 border border-transparent"
+                      className="rounded-full data-[state=active]:bg-gradient-to-r text-white data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-black data-[state=active]:border-yellow-300/50 border border-transparent"
                     >
                       Login
                     </TabsTrigger>
                     <TabsTrigger
                       value="signup"
-                      className="rounded-full data-[state=active]:bg-gradient-to-r data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-black data-[state=active]:border-yellow-300/50 border border-transparent"
+                      className="rounded-full data-[state=active]:bg-gradient-to-r text-white data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-black data-[state=active]:border-yellow-300/50 border border-transparent"
                     >
                       Signup
                     </TabsTrigger>

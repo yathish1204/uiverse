@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+
+- Use React with functional components and hooks - Prefer Tailwind CSS for styling - Ensure responsive design (mobile-first) - Optimize for performance (lazy loading, memoization) - Maintain consistent spacing, typography, and color system - Follow accessibility best practices (ARIA, contrast, keyboard nav)

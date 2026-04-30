@@ -151,9 +151,9 @@ export function Presenters() {
               <Link
                 key={presenter.name}
                 to={`/presenter/${encodeURIComponent(presenter.name)}`}
-                className="group bg-white/5 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
+                className="group bg-white/5 backdrop-blur-sm rounded-2xl  p-3 sm:p-4 border border-white/10 hover:border-yellow-500/50 hover:bg-white/10 transition-all cursor-pointer"
               >
-                <div className="relative flex flex-col items-center text-center">
+                <div className="relative flex sm:flex-col items-center text-center">
                 {isAdmin && (
                       <div className="absolute -top-2 -right-2 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <button
@@ -192,12 +192,14 @@ export function Presenters() {
                       alt={presenter.name}
                       className="w-20 h-20 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white/10 group-hover:border-yellow-500/50 transition-colors bg-gray-800"
                     />
-                    <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-yellow-500 rounded-full border-4 border-[#0a0a0a] flex items-center justify-center">
+                    {/* <div className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-10 sm:h-10 bg-yellow-500 rounded-full border-4 border-[#0a0a0a] flex items-center justify-center">
                       <User className="w-5 h-5 text-black" />
-                    </div>
+                      <p className="text-sm font-semibold text-black">{presenter.presentationCount}</p>
+                    </div> */}
 
                     
                   </div>
+                  <div className="flex flex-col items-start sm:items-center gap-2 pl-3 sm:pl-0">
                   <h3 className="text-base sm:text-xl font-bold text-white mb-1.5 sm:mb-2 group-hover:text-yellow-400 transition-colors line-clamp-1">
                     {presenter.name}
                   </h3>
@@ -205,6 +207,7 @@ export function Presenters() {
                   <p className="text-[13px] sm:text-sm text-white/60">
                     {presenter.presentationCount} {presenter.presentationCount === 1 ? 'Presentation' : 'Presentations'}
                   </p>
+                  </div>
                 </div>
               </Link>
             ))}
